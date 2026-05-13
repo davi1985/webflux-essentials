@@ -9,5 +9,4 @@ public class SpringWebfluxEssentialsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SpringWebfluxEssentialsApplication.class, args);
 	}
-
 }
