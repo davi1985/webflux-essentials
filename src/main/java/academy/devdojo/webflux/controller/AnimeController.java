@@ -1,9 +1,11 @@
 package academy.devdojo.webflux.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import academy.devdojo.webflux.domain.Anime;
 import academy.devdojo.webflux.repository.AnimeRepository;
@@ -27,6 +29,14 @@ public class AnimeController {
 
   @GetMapping(path = "{id}")
   public Mono<Anime> findById(@PathVariable int id) {
-    return animeService.findById(id);
+    return animeService.findById(id)
+        .switchIfEmpty(monoResponseStatusNotFoundException())
+        .log();
+  }
+
+  public <T> Mono<T> monoResponseStatusNotFoundException() {
+    return Mono.error(new ResponseStatusException(
+        HttpStatus.NOT_FOUND,
+        "Anime not found"));
   }
 }
